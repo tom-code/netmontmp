@@ -26,7 +26,8 @@ class FilterDataProvider: NEFilterDataProvider {
     
     override func handleNewFlow(_ flow: NEFilterFlow) -> NEFilterNewFlowVerdict {
         // Add code to determine if the flow should be dropped or not, downloading new rules if required.
-        os_log("ext new flow")
+        os_log("ext new flow2")
+        l.log(msg: flow.debugDescription)
         return .allow()
     }
 }

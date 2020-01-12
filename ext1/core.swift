@@ -12,8 +12,8 @@ import NetworkExtension
 import os.log
 
 @objc protocol AppCommunication {
-
     func promptUser(aboutFlow flowInfo: [String: String], responseHandler: @escaping (Bool) -> Void)
+    func log(message: String)
 }
 
 @objc protocol ProviderCommunication {
@@ -47,20 +47,19 @@ class Loader : NSObject {
     var currentConnection: NSXPCConnection?
 
     func start() {
-        //register()
-        
         guard let extensionIdentifier = extensionBundle.bundleIdentifier else {
             return
         }
         let activationRequest = OSSystemExtensionRequest.activationRequest(forExtensionWithIdentifier: extensionIdentifier, queue: .main)
         activationRequest.delegate = self
         OSSystemExtensionManager.shared.submitRequest(activationRequest)
- 
- //register()
     }
-    func promptUser(aboutFlow flowInfo: [String: String], responseHandler: @escaping (Bool) -> Void) {
-        
+
+    var callback :(String)->Void? = {def in }
+    func updater(closure: @escaping (String)->Void) {
+        callback = closure
     }
+
     
     func configure() {
         let manager = NEFilterManager.shared()
@@ -85,17 +84,6 @@ class Loader : NSObject {
                 }
             }
         })
-        /*let enabled = manager.isEnabled
-        print(enabled)
-        manager.isEnabled = true
-        manager.saveToPreferences { err in
-            os_log("filter saved")
-            
-            if let error = err {
-                os_log("Failed to enable filter: %@", error.localizedDescription)
-                return
-            }
-        }*/
     }
     
     func register() {
@@ -112,19 +100,7 @@ class Loader : NSObject {
 
         
         currentConnection.resume()
-        //Thread.sleep(forTimeInterval: 1)
-        
-        
-        /*guard let providerProxy = currentConnection.remoteObjectProxyWithErrorHandler({ registerError in
-                   os_log("Failed to register with the provider: %@", registerError.localizedDescription)
-                   self.currentConnection?.invalidate()
-                   self.currentConnection = nil
-                   //completionHandler(false)
-               }) as? ProviderCommunication else {
-                   fatalError("Failed to create a remote object proxy for the provider")
-               }
-        providerProxy.register(){ suc in os_log("complet")}
-*/
+
         let prov = currentConnection.remoteObjectProxyWithErrorHandler({ registerError in
             os_log("Failed to register with the provider: %@", registerError.localizedDescription)
             self.currentConnection?.invalidate()
@@ -152,6 +128,16 @@ class Loader : NSObject {
     }
 
 }
+
+extension Loader: AppCommunication {
+    func promptUser(aboutFlow flowInfo: [String: String], responseHandler: @escaping (Bool) -> Void) {
+    }
+    func log(message: String) {
+        os_log("here log")
+        callback(message)
+    }
+}
+
 
 
 extension Loader: OSSystemExtensionRequestDelegate {

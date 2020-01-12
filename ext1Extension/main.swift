@@ -25,6 +25,13 @@ class C1 : NSObject{
         newListener.resume()
         listener = newListener
     }
+
+    func log(msg: String) {
+        let proxy = currentConnection?.remoteObjectProxy
+        let app = proxy as? AppCommunication
+        app?.log(message: msg)
+        os_log("did log?")
+    }
 }
 
 @objc protocol ProviderCommunication {
@@ -32,6 +39,7 @@ class C1 : NSObject{
 }
 @objc protocol AppCommunication {
     func promptUser(aboutFlow flowInfo: [String: String], responseHandler: @escaping (Bool) -> Void)
+    func log(message: String)
 }
 
 extension C1: NSXPCListenerDelegate {
@@ -51,8 +59,6 @@ extension C1: NSXPCListenerDelegate {
 }
 
 extension C1: ProviderCommunication {
-
-
     func register(_ completionHandler: @escaping (Bool) -> Void) {
         os_log("App registered")
         completionHandler(true)
