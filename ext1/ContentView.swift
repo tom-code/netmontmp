@@ -14,9 +14,41 @@ class ListData: ObservableObject {
     @Published var data: [String] = []
 }
 
+struct ToggleModel {
+    var f: (Bool)->Void
+    init(delegate : @escaping (Bool)->Void) {
+        f = delegate
+    }
+    var isSet: Bool = false {
+        didSet {
+            f(isSet)
+        }
+    }
+}
+
+class Model: ObservableObject {
+    static let shared = Model()
+    @Published var data: [String] = []
+    func enable() {
+        Loader.shared.updater(closure: {line in
+            DispatchQueue.main.async() {
+                self.data.append(line)
+            }
+        })
+        Loader.shared.start()
+    }
+}
+
 struct ContentView: View {
-    var loader = Loader()
-    @ObservedObject var data = ListData()
+    @ObservedObject var data = Model.shared
+    @State var enabled = ToggleModel() { ena in
+        print(ena)
+        if (ena) {
+            //self.enable()
+            Model.shared.enable()
+        }
+    }
+    
     
     var body: some View {
         VStack {
@@ -24,14 +56,17 @@ struct ContentView: View {
             /*.frame(maxWidth: .infinity, maxHeight: .infinity)*/
             Button(action: {
                 os_log("test pressed")
-                self.loader.updater(closure: {line in
+                Loader.shared.updater(closure: {line in
                     DispatchQueue.main.async() {
                         self.data.data.append(line)
                     }
                 })
-                self.loader.start()
+                //self.loader.start()
             }) {
                 Text("test")
+            }
+            Toggle(isOn: $enabled.isSet) {
+                Text("enable")
             }
             List {
                 ForEach(self.data.data, id: \.self) {

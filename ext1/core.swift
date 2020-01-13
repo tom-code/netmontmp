@@ -17,13 +17,13 @@ import os.log
 }
 
 @objc protocol ProviderCommunication {
-
     func register(_ completionHandler: @escaping (Bool) -> Void)
 }
 
 
 class Loader : NSObject {
-    lazy var extensionBundle: Bundle = {
+    static let shared = Loader()
+    private lazy var extensionBundle: Bundle = {
         let extensionsDirectoryURL = URL(fileURLWithPath: "Contents/Library/SystemExtensions", relativeTo: Bundle.main.bundleURL)
         let extensionURLs: [URL]
         do {
@@ -43,8 +43,18 @@ class Loader : NSObject {
 
         return extensionBundle
     }()
+    private func extensionMachServiceName(from bundle: Bundle) -> String {
+
+        guard let networkExtensionKeys = bundle.object(forInfoDictionaryKey: "NetworkExtension") as? [String: Any],
+            let machServiceName = networkExtensionKeys["NEMachServiceName"] as? String else {
+                fatalError("Mach service name is missing from the Info.plist")
+        }
+
+        return machServiceName
+    }
+
     
-    var currentConnection: NSXPCConnection?
+    private var currentConnection: NSXPCConnection?
 
     func start() {
         guard let extensionIdentifier = extensionBundle.bundleIdentifier else {
@@ -55,13 +65,13 @@ class Loader : NSObject {
         OSSystemExtensionManager.shared.submitRequest(activationRequest)
     }
 
-    var callback :(String)->Void? = {def in }
+    private var callback :(String)->Void? = {def in }
     func updater(closure: @escaping (String)->Void) {
         callback = closure
     }
 
     
-    func configure() {
+    private func configure() {
         let manager = NEFilterManager.shared()
         manager.loadFromPreferences(completionHandler: {loadError in
             if let error = loadError {
@@ -116,17 +126,6 @@ class Loader : NSObject {
         os_log("reg4")
         
     }
-
-    private func extensionMachServiceName(from bundle: Bundle) -> String {
-
-        guard let networkExtensionKeys = bundle.object(forInfoDictionaryKey: "NetworkExtension") as? [String: Any],
-            let machServiceName = networkExtensionKeys["NEMachServiceName"] as? String else {
-                fatalError("Mach service name is missing from the Info.plist")
-        }
-
-        return machServiceName
-    }
-
 }
 
 extension Loader: AppCommunication {
@@ -142,25 +141,22 @@ extension Loader: AppCommunication {
 
 extension Loader: OSSystemExtensionRequestDelegate {
 
-    // MARK: OSSystemExtensionActivationRequestDelegate
-
     func request(_ request: OSSystemExtensionRequest, didFinishWithResult result: OSSystemExtensionRequest.Result) {
-os_log("reuest1")
-        guard result == .completed else {
+        os_log("reuest1")
+        if result != .completed {
+        //guard result == .completed else {
             os_log("Unexpected result %d for system extension request", result.rawValue)
             return
         }
-        configure()
+        //configure()
         register()
     }
 
     func request(_ request: OSSystemExtensionRequest, didFailWithError error: Error) {
-
         os_log("System extension request failed: %@", error.localizedDescription)
     }
 
     func requestNeedsUserApproval(_ request: OSSystemExtensionRequest) {
-
         os_log("Extension %@ requires user approval", request.identifier)
     }
 
