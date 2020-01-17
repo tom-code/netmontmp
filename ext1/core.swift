@@ -11,14 +11,7 @@ import SystemExtensions
 import NetworkExtension
 import os.log
 
-@objc protocol AppCommunication {
-    func promptUser(aboutFlow flowInfo: [String: String], responseHandler: @escaping (Bool) -> Void)
-    func log(message: String)
-}
 
-@objc protocol ProviderCommunication {
-    func register(_ completionHandler: @escaping (Bool) -> Void)
-}
 
 
 class Loader : NSObject {

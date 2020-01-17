@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E254860123CD0E6B00EAC64A /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = E254860023CD0E6B00EAC64A /* common.swift */; };
+		E254860223CD0E6B00EAC64A /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = E254860023CD0E6B00EAC64A /* common.swift */; };
 		E25C52B923C9C26A00103031 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C52B823C9C26A00103031 /* AppDelegate.swift */; };
 		E25C52BB23C9C26A00103031 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25C52BA23C9C26A00103031 /* ContentView.swift */; };
 		E25C52BD23C9C26C00103031 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E25C52BC23C9C26C00103031 /* Assets.xcassets */; };
@@ -45,6 +47,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		E254860023CD0E6B00EAC64A /* common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = common.swift; sourceTree = "<group>"; };
 		E25C52B523C9C26A00103031 /* ext1.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ext1.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E25C52B823C9C26A00103031 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E25C52BA23C9C26A00103031 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 				E25C52C523C9C26C00103031 /* ext1.entitlements */,
 				E25C52BE23C9C26C00103031 /* Preview Content */,
 				E25C52E123C9C8CE00103031 /* core.swift */,
+				E254860023CD0E6B00EAC64A /* common.swift */,
 			);
 			path = ext1;
 			sourceTree = "<group>";
@@ -244,6 +248,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E254860123CD0E6B00EAC64A /* common.swift in Sources */,
 				E25C52BB23C9C26A00103031 /* ContentView.swift in Sources */,
 				E25C52B923C9C26A00103031 /* AppDelegate.swift in Sources */,
 				E25C52E223C9C8CE00103031 /* core.swift in Sources */,
@@ -256,6 +261,7 @@
 			files = (
 				E25C52D723C9C4A000103031 /* main.swift in Sources */,
 				E25C52D523C9C4A000103031 /* FilterDataProvider.swift in Sources */,
+				E254860223CD0E6B00EAC64A /* common.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

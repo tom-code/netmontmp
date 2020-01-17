@@ -34,13 +34,6 @@ class C1 : NSObject{
     }
 }
 
-@objc protocol ProviderCommunication {
-    func register(_ completionHandler: @escaping (Bool) -> Void)
-}
-@objc protocol AppCommunication {
-    func promptUser(aboutFlow flowInfo: [String: String], responseHandler: @escaping (Bool) -> Void)
-    func log(message: String)
-}
 
 extension C1: NSXPCListenerDelegate {
     
